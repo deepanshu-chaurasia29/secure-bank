@@ -1,0 +1,5 @@
+body { font-family: Arial, sans-serif; max-width: 480px; margin: 40px auto; }
+form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+input, select, button { padding: 8px; font-size: 14px; }
+button { cursor: pointer; }
+#output { background: #f4f4f4; padding: 12px; white-space: pre-wrap; }
