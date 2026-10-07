@@ -74,4 +74,31 @@ public class AccountRepository {
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
+
+    /**
+     * Reads the account AND locks its row until the current transaction ends.
+     * Must be called inside a @Transactional method. Other requests that try to
+     * lock the same row will wait here, so two withdrawals can never both
+     * read the same old balance (FR-C5).
+     */
+    public Optional<Account> findByUserIdForUpdate(Long userId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM accounts WHERE user_id = ? FOR UPDATE", ACCOUNT_ROW_MAPPER, userId
+        ).stream().findFirst();
+    }
+
+    public void updateBalance(Long accountId, BigDecimal newBalance) {
+        jdbcTemplate.update(
+                "UPDATE accounts SET balance = ? WHERE id = ?", newBalance, accountId);
+    }
+
+    /**
+     * Locks ONE account row by its id (used by transfers, which must lock two rows).
+     * Must be called inside a @Transactional method.
+     */
+    public Optional<Account> findByIdForUpdate(Long accountId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM accounts WHERE id = ? FOR UPDATE", ACCOUNT_ROW_MAPPER, accountId
+        ).stream().findFirst();
+    }
 }

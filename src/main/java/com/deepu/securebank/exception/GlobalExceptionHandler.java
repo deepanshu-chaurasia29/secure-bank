@@ -29,6 +29,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
+    // Bad JSON body, e.g. {"amount": "abc"} or a missing body
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleBadJson(Exception ex, HttpServletRequest request) {
+        ApiError body = new ApiError(HttpStatus.BAD_REQUEST.value(),
+                "Request body is missing or not valid JSON", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // Bad URL parameter, e.g. ?from=not-a-date or ?page=abc
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleBadParam(
+            org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex,
+            HttpServletRequest request) {
+        ApiError body = new ApiError(HttpStatus.BAD_REQUEST.value(),
+                "Invalid value for '" + ex.getName() + "'", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     // Anything unexpected — never show the real exception message or stack trace to the client
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex, HttpServletRequest request) {

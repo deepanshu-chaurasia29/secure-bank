@@ -3,3 +3,20 @@ form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
 input, select, button { padding: 8px; font-size: 14px; }
 button { cursor: pointer; }
 #output { background: #f4f4f4; padding: 12px; white-space: pre-wrap; }
+
+/* ---- Sprint 2: dashboard ---- */
+body.wide { max-width: 760px; }
+.top { display: flex; justify-content: space-between; align-items: center; }
+.notice { background: #fff7e0; padding: 8px 12px; font-size: 13px; }
+.card { border: 1px solid #ddd; border-radius: 8px; padding: 14px 18px; margin: 16px 0; }
+.row { display: flex; gap: 8px; }
+.row button { flex: 1; }
+button.secondary { background: #eee; border: 1px solid #bbb; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.ok { color: #16a34a; }
+.error { color: #dc2626; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
+.pager { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }

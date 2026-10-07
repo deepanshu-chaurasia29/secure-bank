@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS securebank;
+--CREATE DATABASE IF NOT EXISTS securebank;
 USE securebank;
 
 CREATE TABLE IF NOT EXISTS users (
