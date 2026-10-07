@@ -17,7 +17,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   });
   const data = await res.json();
   output.textContent = JSON.stringify(data, null, 2);
-  if (res.ok) localStorage.setItem('token', data.token);
+  if (res.ok) { localStorage.setItem('token', data.token); window.location.href = '/dashboard.html'; }
 });
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -33,5 +33,5 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   });
   const data = await res.json();
   output.textContent = JSON.stringify(data, null, 2);
-  if (res.ok) localStorage.setItem('token', data.token);
+  if (res.ok) { localStorage.setItem('token', data.token); window.location.href = '/dashboard.html'; }
 });

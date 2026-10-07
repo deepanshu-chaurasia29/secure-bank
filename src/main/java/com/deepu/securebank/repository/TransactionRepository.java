@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -89,5 +90,18 @@ public class TransactionRepository {
             sql.append(" AND t.created_at < ?");
             params.add(Timestamp.valueOf(toExclusive));
         }
+    }
+
+    /**
+     * How much money this account has already SENT by transfer in a time window
+     * (used for the daily transfer limit, BR-4).
+     */
+    public BigDecimal sumTransferOut(Long accountId, LocalDateTime from, LocalDateTime toExclusive) {
+        BigDecimal sum = jdbcTemplate.queryForObject(
+                "SELECT COALESCE(SUM(amount), 0) FROM transactions " +
+                        "WHERE account_id = ? AND type = 'TRANSFER_OUT' AND status = 'SUCCESS' " +
+                        "AND created_at >= ? AND created_at < ?",
+                BigDecimal.class, accountId, Timestamp.valueOf(from), Timestamp.valueOf(toExclusive));
+        return sum == null ? BigDecimal.ZERO : sum;
     }
 }

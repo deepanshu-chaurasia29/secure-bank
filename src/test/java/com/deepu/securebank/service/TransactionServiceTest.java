@@ -35,7 +35,8 @@ class TransactionServiceTest {
         accountRepository = mock(AccountRepository.class);
         transactionRepository = mock(TransactionRepository.class);
         BankLimits limits = new BankLimits(new BigDecimal("1.00"),
-                new BigDecimal("100000.00"), new BigDecimal("50000.00"));
+                new BigDecimal("100000.00"), new BigDecimal("50000.00"),
+                new BigDecimal("100000.00"), new BigDecimal("200000.00"));
         service = new TransactionService(accountRepository, transactionRepository, limits);
     }
 

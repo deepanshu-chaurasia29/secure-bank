@@ -25,6 +25,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    private static void writeError(jakarta.servlet.http.HttpServletResponse res, int status,
+                                   String message, String path) throws java.io.IOException {
+        res.setStatus(status);
+        res.setContentType("application/json");
+        String json = String.format(
+                "{\"timestamp\":\"%s\",\"status\":%d,\"message\":\"%s\",\"path\":\"%s\"}",
+                java.time.LocalDateTime.now(), status, message, path);
+        res.getWriter().write(json);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -41,6 +51,14 @@ public class SecurityConfig {
                         // Everything else under /api/v1 needs a valid JWT
                         .requestMatchers("/api/v1/**").authenticated()
                         .anyRequest().permitAll()
+                )
+                .exceptionHandling(ex -> ex
+                        // No / bad token on a protected URL -> 401 in our standard JSON format
+                        .authenticationEntryPoint((req, res, e) ->
+                                writeError(res, 401, "Please log in first", req.getRequestURI()))
+                        // Logged in but wrong role (e.g. customer calling /admin) -> 403
+                        .accessDeniedHandler((req, res, e) ->
+                                writeError(res, 403, "You do not have permission to do this", req.getRequestURI()))
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

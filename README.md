@@ -1,4 +1,4 @@
-# SecureBank — Sprint 1
+# SecureBank — Sprint 1 + Sprint 2
 
 **What this sprint delivers:**
 - Project setup (Spring Boot 3, Java 21, Maven, JdbcTemplate)
@@ -56,3 +56,30 @@
 
 ## Next: Sprint 2
 Deposit, withdraw, balance, and paginated transaction history.
+
+
+---
+
+# Sprint 2: Balance, Deposit, Withdraw, History
+
+**New APIs (all need a JWT):**
+
+| Method | URL | What it does |
+|---|---|---|
+| GET | `/api/v1/accounts/me` | Own account: number, type, status, balance |
+| POST | `/api/v1/transactions/deposit` | Deposit `{ "amount": 500.00, "remark": "salary" }` |
+| POST | `/api/v1/transactions/withdraw` | Withdraw (same body) |
+| GET | `/api/v1/transactions/me?page=0&size=10&type=DEPOSIT&from=2026-10-01&to=2026-10-31` | History, newest first, filters optional |
+
+**How to test:** run the app, open `http://localhost:8080`, register or login. You land on `/dashboard.html`.
+
+**Run the unit tests:** `mvn test`
+
+**Limits** (change in `application.properties` or with environment variables): min 1.00, max deposit 100000.00, max withdraw 50000.00.
+
+**Also fixed in this sprint (small gaps from Sprint 1):**
+- Missing/expired token now returns a clean JSON `401` (before: empty 403).
+- Wrong role now returns a clean JSON `403`.
+- Bad JSON or a bad date in the URL now returns `400` (before: `500`).
+
+**Next: Sprint 3** - transfer between accounts, safe locking of two accounts, daily limit, concurrency test.
