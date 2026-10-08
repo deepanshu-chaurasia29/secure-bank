@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecureBank - Admin</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="wide admin">
+  <header class="top">
+    <h1>SecureBank Admin</h1>
+    <button id="logoutBtn" class="secondary">Logout</button>
+  </header>
+  <p class="notice">Admins can look and block. Admins cannot move money and cannot see passwords.</p>
+  <p id="message"></p>
+
+  <section class="card">
+    <h2>Accounts</h2>
+    <div class="search-row">
+      <input type="text" id="searchBox" maxlength="100" placeholder="Search by name, email or account number">
+      <button id="searchBtn" class="secondary">Search</button>
+      <button id="clearBtn" class="secondary">Clear</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Account no.</th><th>Name</th><th>Email</th><th>Type</th>
+            <th>Status</th><th>Balance</th><th>Login</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="accountsBody"><tr><td colspan="8">Loading...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="prevBtn" class="secondary">Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn" class="secondary">Next</button>
+    </div>
+  </section>
+
+  <section class="card" id="historyCard" style="display:none">
+    <h2 id="historyTitle">History</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance after</th><th>Other account</th><th>Remark</th></tr>
+        </thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+    <div class="pager">
+      <button id="hPrevBtn" class="secondary">Previous</button>
+      <span id="hPageInfo"></span>
+      <button id="hNextBtn" class="secondary">Next</button>
+    </div>
+    <button id="closeHistoryBtn" class="secondary">Close history</button>
+  </section>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

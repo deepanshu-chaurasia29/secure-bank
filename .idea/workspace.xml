@@ -5,7 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b505d1f8-1980-4492-8ee9-0aa2c4922f0f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/config/AdminSeeder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/dto/AdminAccountResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/dto/ChangePasswordRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/dto/MessageResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/repository/AdminRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/repository/AuditLogRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/service/AdminService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/admin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/admin.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/deepu/securebank/integration/AuthLockoutIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/deepu/securebank/integration/TestDatabase.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/deepu/securebank/service/AdminServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/deepu/securebank/service/AuthServiceTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/repository/AccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/repository/AccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/service/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/service/TransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/deepu/securebank/service/TransactionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/main.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/js/dashboard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +43,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "deepanshu-chaurasia29"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/deepanshu-chaurasia29/secure-bank.git",
+    "accountId": "e870d411-1288-44f2-8d59-f0eca083b97f"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 1
@@ -29,18 +64,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.SecurebankApplication.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SecurebankApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "feature/sprint-4-admin",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Programming/PROJECTS/SECURE_BANK/securebank/src/test"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test" />
+      <recent name="C:\Programming\PROJECTS\SECURE_BANK\securebank\src\main" />
+      <recent name="C:\Programming\PROJECTS\SECURE_BANK\securebank\src\main\resources\static\css" />
+      <recent name="C:\Programming\PROJECTS\SECURE_BANK\securebank\src\main\resources\static\js" />
+      <recent name="C:\Programming\PROJECTS\SECURE_BANK\securebank\src\main\resources\static" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.deepu.securebank.service" />
+      <recent name="com.deepu.securebank.integration" />
+      <recent name="com.deepu.securebank.repository" />
+      <recent name="com.deepu.securebank.dto" />
+      <recent name="com.deepu.securebank.controller" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.SecurebankApplication">
     <configuration name="SecurebankApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <envs>
+        <env name="DB_PASSWORD" value="deepu@123" />
+        <env name="ADMIN_EMAIL" value="admin@securebank.com" />
+        <env name="ADMIN_PASSWORD" value="admin123" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="com.deepu.securebank.SecurebankApplication" />
       <module name="securebank" />
       <extension name="coverage">
@@ -53,9 +113,51 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <module name="securebank" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthLockoutIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="securebank" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.deepu.securebank.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.deepu.securebank.integration" />
+      <option name="MAIN_CLASS_NAME" value="com.deepu.securebank.integration.AuthLockoutIntegrationTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <envs>
+        <env name="DB_PASSWORD" value="deepu@123" />
+      </envs>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <module name="securebank" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <envs>
+        <env name="DB_PASSWORD" value="deepu@123" />
+      </envs>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.SecurebankApplication" />
+      <item itemvalue="JUnit.AuthLockoutIntegrationTest" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.SecurebankApplication" />
+        <item itemvalue="JUnit.AuthLockoutIntegrationTest" />
       </list>
     </recent_temporary>
   </component>
@@ -68,5 +170,28 @@
       <updated>1791113325926</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feature/sprint-3-transfer" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

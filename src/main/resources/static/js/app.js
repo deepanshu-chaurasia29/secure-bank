@@ -1,5 +1,12 @@
 const output = document.getElementById('output');
 
+// Save the token and the role, then open the right page: admins go to the admin panel.
+function goAfterLogin(data) {
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('role', data.role);
+  window.location.href = (data.role === 'ADMIN') ? '/admin.html' : '/dashboard.html';
+}
+
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const body = {
@@ -17,7 +24,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
   });
   const data = await res.json();
   output.textContent = JSON.stringify(data, null, 2);
-  if (res.ok) { localStorage.setItem('token', data.token); window.location.href = '/dashboard.html'; }
+  if (res.ok) goAfterLogin(data);
 });
 
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -33,5 +40,5 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   });
   const data = await res.json();
   output.textContent = JSON.stringify(data, null, 2);
-  if (res.ok) { localStorage.setItem('token', data.token); window.location.href = '/dashboard.html'; }
+  if (res.ok) goAfterLogin(data);
 });

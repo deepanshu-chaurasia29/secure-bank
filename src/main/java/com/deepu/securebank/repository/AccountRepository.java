@@ -101,4 +101,15 @@ public class AccountRepository {
                 "SELECT * FROM accounts WHERE id = ? FOR UPDATE", ACCOUNT_ROW_MAPPER, accountId
         ).stream().findFirst();
     }
+
+    public Optional<Account> findById(Long accountId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM accounts WHERE id = ?", ACCOUNT_ROW_MAPPER, accountId
+        ).stream().findFirst();
+    }
+
+    /** Used by the admin to FREEZE or unfreeze (set ACTIVE) an account. */
+    public void updateStatus(Long accountId, String status) {
+        jdbcTemplate.update("UPDATE accounts SET status = ? WHERE id = ?", status, accountId);
+    }
 }
