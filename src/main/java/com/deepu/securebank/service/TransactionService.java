@@ -75,34 +75,52 @@ public class TransactionService {
     // ------------------------------------------------------------------
     public PageResponse<TransactionResponse> history(Long userId, int page, int size,
                                                      String type, LocalDate from, LocalDate to) {
+        checkHistoryInput(page, size, type, from, to);
+        Account account = accountRepository.findByUserId(userId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Account not found"));
+        return loadHistory(account.getId(), page, size, type, from, to);
+    }
+
+    /** The same history, but for ANY account id. Used by the admin panel (FR-E4). */
+    public PageResponse<TransactionResponse> historyByAccountId(Long accountId, int page, int size,
+                                                                String type, LocalDate from, LocalDate to) {
+        checkHistoryInput(page, size, type, from, to);
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Account not found"));
+        return loadHistory(accountId, page, size, type, from, to);
+    }
+
+    private void checkHistoryInput(int page, int size, String type, LocalDate from, LocalDate to) {
         if (page < 0) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "page cannot be negative");
         }
         if (size < 1 || size > MAX_PAGE_SIZE) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "size must be between 1 and " + MAX_PAGE_SIZE);
         }
-        String cleanType = null;
-        if (type != null && !type.isBlank()) {
-            cleanType = type.trim().toUpperCase();
-            if (!VALID_TYPES.contains(cleanType)) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, "type must be one of " + VALID_TYPES);
-            }
+        String cleanType = cleanType(type);
+        if (cleanType != null && !VALID_TYPES.contains(cleanType)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "type must be one of " + VALID_TYPES);
         }
         if (from != null && to != null && from.isAfter(to)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "'from' date cannot be after 'to' date");
         }
+    }
 
-        Account account = accountRepository.findByUserId(userId)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Account not found"));
+    private String cleanType(String type) {
+        return (type == null || type.isBlank()) ? null : type.trim().toUpperCase();
+    }
 
+    private PageResponse<TransactionResponse> loadHistory(Long accountId, int page, int size,
+                                                          String type, LocalDate from, LocalDate to) {
+        String cleanType = cleanType(type);
         LocalDateTime fromTime = (from == null) ? null : from.atStartOfDay();
         // "to" is a whole day, so we go up to (but not including) the next day's midnight.
         LocalDateTime toExclusive = (to == null) ? null : to.plusDays(1).atStartOfDay();
 
         List<TransactionResponse> rows = transactionRepository
-                .findPage(account.getId(), cleanType, fromTime, toExclusive, page, size)
+                .findPage(accountId, cleanType, fromTime, toExclusive, page, size)
                 .stream().map(this::toResponse).toList();
-        long total = transactionRepository.count(account.getId(), cleanType, fromTime, toExclusive);
+        long total = transactionRepository.count(accountId, cleanType, fromTime, toExclusive);
 
         return new PageResponse<>(rows, page, size, total);
     }

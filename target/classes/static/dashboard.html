@@ -1,77 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SecureBank - Dashboard</title>
-    <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecureBank - Dashboard</title>
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="wide">
-<header class="top">
+  <header class="top">
     <h1>SecureBank</h1>
     <button id="logoutBtn" class="secondary">Logout</button>
-</header>
-<p class="notice">Demo project. All money here is demo money.</p>
+  </header>
+  <p class="notice">Demo project. All money here is demo money.</p>
 
-<section class="card">
+  <section class="card">
     <h2>My Account</h2>
     <div id="accountInfo">Loading...</div>
-</section>
+  </section>
 
-<section class="card">
+  <section class="card">
     <h2>Deposit / Withdraw</h2>
     <form id="moneyForm">
-        <input type="number" id="amount" step="0.01" min="1" placeholder="Amount (e.g. 500.00)" required>
-        <input type="text" id="remark" maxlength="255" placeholder="Remark (optional)">
-        <div class="row">
-            <button type="submit" id="depositBtn" data-action="deposit">Deposit</button>
-            <button type="submit" id="withdrawBtn" data-action="withdraw" class="secondary">Withdraw</button>
-        </div>
+      <input type="number" id="amount" step="0.01" min="1" placeholder="Amount (e.g. 500.00)" required>
+      <input type="text" id="remark" maxlength="255" placeholder="Remark (optional)">
+      <div class="row">
+        <button type="submit" id="depositBtn" data-action="deposit">Deposit</button>
+        <button type="submit" id="withdrawBtn" data-action="withdraw" class="secondary">Withdraw</button>
+      </div>
     </form>
     <p id="message"></p>
-</section>
+  </section>
 
-<section class="card">
+  <section class="card">
     <h2>Transfer Money</h2>
     <form id="transferForm">
-        <input type="text" id="toAccount" inputmode="numeric" maxlength="12" pattern="\d{12}"
-               placeholder="Receiver account number (12 digits)" required>
-        <input type="number" id="tAmount" step="0.01" min="1" placeholder="Amount (e.g. 250.00)" required>
-        <input type="text" id="tRemark" maxlength="255" placeholder="Remark (optional)">
-        <button type="submit" id="transferBtn">Send money</button>
+      <input type="text" id="toAccount" inputmode="numeric" maxlength="12" pattern="\d{12}"
+             placeholder="Receiver account number (12 digits)" required>
+      <input type="number" id="tAmount" step="0.01" min="1" placeholder="Amount (e.g. 250.00)" required>
+      <input type="text" id="tRemark" maxlength="255" placeholder="Remark (optional)">
+      <button type="submit" id="transferBtn">Send money</button>
     </form>
     <p id="transferMessage"></p>
-</section>
+  </section>
 
-<section class="card">
+  <section class="card">
+    <h2>Change Password</h2>
+    <form id="passwordForm">
+      <input type="password" id="oldPassword" placeholder="Old password" autocomplete="current-password" required>
+      <input type="password" id="newPassword" placeholder="New password (8+ characters, letter and number)"
+             autocomplete="new-password" required>
+      <button type="submit" id="passwordBtn" class="secondary">Change password</button>
+    </form>
+    <p id="passwordMessage"></p>
+  </section>
+
+  <section class="card">
     <h2>Transaction History</h2>
     <div class="filters">
-        <select id="fType">
-            <option value="">All types</option>
-            <option value="DEPOSIT">Deposit</option>
-            <option value="WITHDRAW">Withdraw</option>
-            <option value="TRANSFER_OUT">Transfer out</option>
-            <option value="TRANSFER_IN">Transfer in</option>
-        </select>
-        <input type="date" id="fFrom">
-        <input type="date" id="fTo">
-        <button id="applyFilters" class="secondary">Apply</button>
+      <select id="fType">
+        <option value="">All types</option>
+        <option value="DEPOSIT">Deposit</option>
+        <option value="WITHDRAW">Withdraw</option>
+        <option value="TRANSFER_OUT">Transfer out</option>
+        <option value="TRANSFER_IN">Transfer in</option>
+      </select>
+      <input type="date" id="fFrom">
+      <input type="date" id="fTo">
+      <button id="applyFilters" class="secondary">Apply</button>
     </div>
     <div class="table-wrap">
-        <table>
-            <thead>
-            <tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance after</th><th>Other account</th><th>Remark</th></tr>
-            </thead>
-            <tbody id="historyBody"><tr><td colspan="6">Loading...</td></tr></tbody>
-        </table>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance after</th><th>Other account</th><th>Remark</th></tr>
+        </thead>
+        <tbody id="historyBody"><tr><td colspan="6">Loading...</td></tr></tbody>
+      </table>
     </div>
     <div class="pager">
-        <button id="prevBtn" class="secondary">Previous</button>
-        <span id="pageInfo"></span>
-        <button id="nextBtn" class="secondary">Next</button>
+      <button id="prevBtn" class="secondary">Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn" class="secondary">Next</button>
     </div>
-</section>
+  </section>
 
-<script src="/js/dashboard.js"></script>
+  <script src="/js/dashboard.js"></script>
 </body>
 </html>

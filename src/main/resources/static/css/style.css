@@ -20,3 +20,15 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #eee; }
 .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+/* ---- Sprint 4: admin panel ---- */
+body.admin { max-width: 1050px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+.badge.active { background: #dcfce7; color: #166534; }
+.badge.frozen { background: #fee2e2; color: #991b1b; }
+.badge.locked { background: #fef3c7; color: #92400e; }
+button.danger { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+.actions { display: flex; gap: 4px; flex-wrap: wrap; }
+.actions button { padding: 4px 8px; font-size: 12px; }
+.search-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.search-row input { flex: 1; }

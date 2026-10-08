@@ -20,6 +20,7 @@ async function api(path, options = {}) {
   });
   if (res.status === 401) {          // token missing / expired
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     window.location.href = '/';
     throw new Error('Not logged in');
   }
@@ -128,6 +129,31 @@ document.getElementById('transferForm').addEventListener('submit', async (e) => 
   }
 });
 
+// ---- change password ----
+document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  if (busy) return;
+  const msg = document.getElementById('passwordMessage');
+  busy = true;
+  document.getElementById('passwordBtn').disabled = true;
+  try {
+    const body = {
+      oldPassword: document.getElementById('oldPassword').value,
+      newPassword: document.getElementById('newPassword').value
+    };
+    const r = await api('/api/v1/auth/change-password', { method: 'POST', body: JSON.stringify(body) });
+    msg.className = 'ok';
+    msg.textContent = r.message;
+    document.getElementById('passwordForm').reset();
+  } catch (err) {
+    msg.className = 'error';
+    msg.textContent = err.message;
+  } finally {
+    busy = false;
+    document.getElementById('passwordBtn').disabled = false;
+  }
+});
+
 // ---- history ----
 async function loadHistory() {
   const body = document.getElementById('historyBody');
@@ -189,6 +215,7 @@ document.getElementById('nextBtn').addEventListener('click', () => { if (current
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('role');
   window.location.href = '/';
 });
 

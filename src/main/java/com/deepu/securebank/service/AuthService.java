@@ -1,12 +1,14 @@
 package com.deepu.securebank.service;
 
 import com.deepu.securebank.dto.AuthResponse;
+import com.deepu.securebank.dto.ChangePasswordRequest;
 import com.deepu.securebank.dto.LoginRequest;
 import com.deepu.securebank.dto.RegisterRequest;
 import com.deepu.securebank.exception.ApiException;
 import com.deepu.securebank.model.Account;
 import com.deepu.securebank.model.User;
 import com.deepu.securebank.repository.AccountRepository;
+import com.deepu.securebank.repository.AuditLogRepository;
 import com.deepu.securebank.repository.UserRepository;
 import com.deepu.securebank.security.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -27,16 +29,19 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final AuditLogRepository auditLogRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final SecureRandom random = new SecureRandom();
 
     public AuthService(UserRepository userRepository,
-                        AccountRepository accountRepository,
-                        PasswordEncoder passwordEncoder,
-                        JwtUtil jwtUtil) {
+                       AccountRepository accountRepository,
+                       AuditLogRepository auditLogRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
+        this.auditLogRepository = auditLogRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
@@ -77,7 +82,13 @@ public class AuthService {
         return new AuthResponse(token, account.getAccountNumber(), user.getFullName(), "CUSTOMER");
     }
 
-    @Transactional
+    /**
+     * noRollbackFor = ApiException.class is IMPORTANT here.
+     * By default, Spring UNDOES all database changes when a method throws an exception.
+     * In login we WANT to keep the changes (failed-attempt counter, lock, audit lines)
+     * even though we throw an error to the user. Without this, the lockout never works.
+     */
+    @Transactional(noRollbackFor = ApiException.class)
     public AuthResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
@@ -85,6 +96,7 @@ public class AuthService {
 
         // FR-A5: check lockout first
         if (user.getLockedUntil() != null && user.getLockedUntil().isAfter(LocalDateTime.now())) {
+            auditLogRepository.log(user.getId(), "LOGIN_BLOCKED", "login attempt while the account is locked");
             throw new ApiException(HttpStatus.LOCKED,
                     "Account is locked due to too many failed attempts. Try again after "
                             + user.getLockedUntil());
@@ -96,21 +108,48 @@ public class AuthService {
             int attempts = user.getFailedAttempts() + 1;
             if (attempts >= MAX_FAILED_ATTEMPTS) {
                 userRepository.lockUser(user.getId(), LocalDateTime.now().plusMinutes(LOCK_MINUTES));
+                auditLogRepository.log(user.getId(), "ACCOUNT_LOCKED",
+                        "locked for " + LOCK_MINUTES + " minutes after " + MAX_FAILED_ATTEMPTS + " wrong passwords");
                 throw new ApiException(HttpStatus.LOCKED,
                         "Too many failed attempts. Account locked for " + LOCK_MINUTES + " minutes");
             }
             userRepository.incrementFailedAttempts(user.getId(), attempts);
+            auditLogRepository.log(user.getId(), "LOGIN_FAILED",
+                    "wrong password, attempt " + attempts + " of " + MAX_FAILED_ATTEMPTS);
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
         }
 
         // Successful login: reset the failed-attempt counter (FR-A5)
         userRepository.resetFailedAttempts(user.getId());
+        auditLogRepository.log(user.getId(), "LOGIN_SUCCESS", "logged in");
 
-        Account account = accountRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Account not found for user"));
+        // A CUSTOMER always has an account. An ADMIN has none (admins cannot move money).
+        Account account = accountRepository.findByUserId(user.getId()).orElse(null);
+        if (account == null && !"ADMIN".equals(user.getRole())) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Account not found for user");
+        }
+        String accountNumber = (account == null) ? null : account.getAccountNumber();
 
         String token = jwtUtil.generateToken(user.getId(), user.getRole());
-        return new AuthResponse(token, account.getAccountNumber(), user.getFullName(), user.getRole());
+        return new AuthResponse(token, accountNumber, user.getFullName(), user.getRole());
+    }
+
+    /** FR-A7: a logged-in user changes their own password by giving the old one. */
+    @Transactional
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
+
+        // 400 (not 401) on purpose: the dashboard treats 401 as "token expired" and logs you out.
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPasswordHash())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Old password is incorrect");
+        }
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPasswordHash())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "New password must be different from the old password");
+        }
+
+        userRepository.updatePassword(userId, passwordEncoder.encode(request.getNewPassword()));
+        auditLogRepository.log(userId, "PASSWORD_CHANGED", "user changed their own password");
     }
 
     /**
