@@ -75,7 +75,7 @@ class AuthServiceTest {
     // ---------------- change password ----------------
     @Test
     void changePassword_savesTheNewHash_andWritesAnAuditLine() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
+        when(userRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
         when(passwordEncoder.matches("OldPass1", "OLDHASH")).thenReturn(true);
         when(passwordEncoder.matches("NewPass1", "OLDHASH")).thenReturn(false);
         when(passwordEncoder.encode("NewPass1")).thenReturn("NEWHASH");
@@ -83,12 +83,13 @@ class AuthServiceTest {
         service.changePassword(1L, change("OldPass1", "NewPass1"));
 
         verify(userRepository).updatePassword(1L, "NEWHASH");
+        verify(userRepository).resetFailedAttempts(1L);
         verify(auditLogRepository).log(eq(1L), eq("PASSWORD_CHANGED"), anyString());
     }
 
     @Test
     void changePassword_wrongOldPassword_isRejectedWith400_notWith401() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
+        when(userRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
         when(passwordEncoder.matches("Wrong123", "OLDHASH")).thenReturn(false);
 
         ApiException ex = assertThrows(ApiException.class, () -> service.changePassword(1L, change("Wrong123", "NewPass1")));
@@ -100,7 +101,7 @@ class AuthServiceTest {
 
     @Test
     void changePassword_newPasswordSameAsOld_isRejected() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
+        when(userRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
         when(passwordEncoder.matches("SamePass1", "OLDHASH")).thenReturn(true);
 
         ApiException ex = assertThrows(ApiException.class, () -> service.changePassword(1L, change("SamePass1", "SamePass1")));
@@ -112,7 +113,7 @@ class AuthServiceTest {
     // ---------------- login ----------------
     @Test
     void login_admin_withoutAnAccount_works() {
-        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user("ADMIN", 0, null)));
+        when(userRepository.findByEmailForUpdate("test@test.com")).thenReturn(Optional.of(user("ADMIN", 0, null)));
         when(passwordEncoder.matches("AdminPass1", "OLDHASH")).thenReturn(true);
         when(accountRepository.findByUserId(1L)).thenReturn(Optional.empty());
         when(jwtUtil.generateToken(1L, "ADMIN")).thenReturn("token-admin");
@@ -126,7 +127,7 @@ class AuthServiceTest {
 
     @Test
     void login_customer_withoutAnAccount_isAServerError() {
-        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
+        when(userRepository.findByEmailForUpdate("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
         when(passwordEncoder.matches("Pass1234", "OLDHASH")).thenReturn(true);
         when(accountRepository.findByUserId(1L)).thenReturn(Optional.empty());
 
@@ -139,7 +140,7 @@ class AuthServiceTest {
     void login_success_resetsTheCounter_andWritesAnAuditLine() {
         Account account = new Account();
         account.setAccountNumber("111111111111");
-        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 2, null)));
+        when(userRepository.findByEmailForUpdate("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 2, null)));
         when(passwordEncoder.matches("Pass1234", "OLDHASH")).thenReturn(true);
         when(accountRepository.findByUserId(1L)).thenReturn(Optional.of(account));
         when(jwtUtil.generateToken(1L, "CUSTOMER")).thenReturn("token");
@@ -153,7 +154,7 @@ class AuthServiceTest {
 
     @Test
     void login_wrongPassword_countsTheAttempt_andWritesAnAuditLine() {
-        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
+        when(userRepository.findByEmailForUpdate("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
         when(passwordEncoder.matches("Wrong123", "OLDHASH")).thenReturn(false);
 
         ApiException ex = assertThrows(ApiException.class, () -> service.login(login("Wrong123")));
@@ -165,7 +166,7 @@ class AuthServiceTest {
 
     @Test
     void login_thirdWrongPassword_locksTheUser() {
-        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 2, null)));
+        when(userRepository.findByEmailForUpdate("test@test.com")).thenReturn(Optional.of(user("CUSTOMER", 2, null)));
         when(passwordEncoder.matches("Wrong123", "OLDHASH")).thenReturn(false);
 
         ApiException ex = assertThrows(ApiException.class, () -> service.login(login("Wrong123")));
@@ -177,7 +178,7 @@ class AuthServiceTest {
 
     @Test
     void login_whileLocked_isBlocked_evenWithTheRightPassword() {
-        when(userRepository.findByEmail("test@test.com"))
+        when(userRepository.findByEmailForUpdate("test@test.com"))
                 .thenReturn(Optional.of(user("CUSTOMER", 0, LocalDateTime.now().plusMinutes(10))));
 
         ApiException ex = assertThrows(ApiException.class, () -> service.login(login("Pass1234")));
@@ -185,5 +186,42 @@ class AuthServiceTest {
         assertEquals(HttpStatus.LOCKED, ex.getStatus());
         verify(passwordEncoder, never()).matches(any(), any()); // the password is not even checked
         verify(auditLogRepository).log(eq(1L), eq("LOGIN_BLOCKED"), anyString());
+    }
+
+    // ---------------- change password: wrong old passwords are counted (Sprint 5) ----------------
+    @Test
+    void changePassword_wrongOldPassword_countsTheAttempt() {
+        when(userRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(user("CUSTOMER", 0, null)));
+        when(passwordEncoder.matches("Wrong123", "OLDHASH")).thenReturn(false);
+
+        assertThrows(ApiException.class, () -> service.changePassword(1L, change("Wrong123", "NewPass1")));
+
+        verify(userRepository).incrementFailedAttempts(1L, 1);
+        verify(auditLogRepository).log(eq(1L), eq("PASSWORD_CHANGE_FAILED"), contains("attempt 1 of 3"));
+    }
+
+    @Test
+    void changePassword_thirdWrongOldPassword_locksTheUser() {
+        when(userRepository.findByIdForUpdate(1L)).thenReturn(Optional.of(user("CUSTOMER", 2, null)));
+        when(passwordEncoder.matches("Wrong123", "OLDHASH")).thenReturn(false);
+
+        ApiException ex = assertThrows(ApiException.class, () -> service.changePassword(1L, change("Wrong123", "NewPass1")));
+
+        assertEquals(HttpStatus.LOCKED, ex.getStatus());
+        verify(userRepository).lockUser(eq(1L), any(LocalDateTime.class));
+        verify(auditLogRepository).log(eq(1L), eq("ACCOUNT_LOCKED"), anyString());
+        verify(userRepository, never()).updatePassword(any(), any());
+    }
+
+    @Test
+    void changePassword_whileLocked_isBlocked_andThePasswordIsNotChecked() {
+        when(userRepository.findByIdForUpdate(1L))
+                .thenReturn(Optional.of(user("CUSTOMER", 0, LocalDateTime.now().plusMinutes(10))));
+
+        ApiException ex = assertThrows(ApiException.class, () -> service.changePassword(1L, change("OldPass1", "NewPass1")));
+
+        assertEquals(HttpStatus.LOCKED, ex.getStatus());
+        verify(passwordEncoder, never()).matches(any(), any());
+        verify(auditLogRepository).log(eq(1L), eq("PASSWORD_CHANGE_BLOCKED"), anyString());
     }
 }

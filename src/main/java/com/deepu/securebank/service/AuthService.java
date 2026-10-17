@@ -91,7 +91,10 @@ public class AuthService {
     @Transactional(noRollbackFor = ApiException.class)
     public AuthResponse login(LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
+        // FOR UPDATE: lock this user's row. A second login attempt for the SAME user waits here
+        // until this one has finished, so the failed-attempt counter cannot be beaten by
+        // many wrong passwords sent at the same moment.
+        User user = userRepository.findByEmailForUpdate(request.getEmail())
                 .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 
         // FR-A5: check lockout first
@@ -134,21 +137,44 @@ public class AuthService {
         return new AuthResponse(token, accountNumber, user.getFullName(), user.getRole());
     }
 
-    /** FR-A7: a logged-in user changes their own password by giving the old one. */
-    @Transactional
+    /**
+     * FR-A7: a logged-in user changes their own password by giving the old one.
+     * Wrong old passwords are counted and lock the user, exactly like wrong login passwords.
+     * (Otherwise someone with a stolen token could guess the old password again and again.)
+     */
+    @Transactional(noRollbackFor = ApiException.class)
     public void changePassword(Long userId, ChangePasswordRequest request) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByIdForUpdate(userId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
 
-        // 400 (not 401) on purpose: the dashboard treats 401 as "token expired" and logs you out.
+        if (user.getLockedUntil() != null && user.getLockedUntil().isAfter(LocalDateTime.now())) {
+            auditLogRepository.log(userId, "PASSWORD_CHANGE_BLOCKED", "password change attempt while the account is locked");
+            throw new ApiException(HttpStatus.LOCKED,
+                    "Account is locked due to too many failed attempts. Try again after " + user.getLockedUntil());
+        }
+
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPasswordHash())) {
+            int attempts = user.getFailedAttempts() + 1;
+            if (attempts >= MAX_FAILED_ATTEMPTS) {
+                userRepository.lockUser(userId, LocalDateTime.now().plusMinutes(LOCK_MINUTES));
+                auditLogRepository.log(userId, "ACCOUNT_LOCKED",
+                        "locked for " + LOCK_MINUTES + " minutes after " + MAX_FAILED_ATTEMPTS + " wrong old passwords");
+                throw new ApiException(HttpStatus.LOCKED,
+                        "Too many wrong attempts. Account locked for " + LOCK_MINUTES + " minutes");
+            }
+            userRepository.incrementFailedAttempts(userId, attempts);
+            auditLogRepository.log(userId, "PASSWORD_CHANGE_FAILED",
+                    "wrong old password, attempt " + attempts + " of " + MAX_FAILED_ATTEMPTS);
+            // 400 (not 401) on purpose: the dashboard treats 401 as "token expired" and logs you out.
             throw new ApiException(HttpStatus.BAD_REQUEST, "Old password is incorrect");
         }
+
         if (passwordEncoder.matches(request.getNewPassword(), user.getPasswordHash())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "New password must be different from the old password");
         }
 
         userRepository.updatePassword(userId, passwordEncoder.encode(request.getNewPassword()));
+        userRepository.resetFailedAttempts(userId);
         auditLogRepository.log(userId, "PASSWORD_CHANGED", "user changed their own password");
     }
 

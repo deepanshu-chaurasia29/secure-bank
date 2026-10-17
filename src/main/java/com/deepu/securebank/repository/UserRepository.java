@@ -99,4 +99,22 @@ public class UserRepository {
         jdbcTemplate.update(
                 "UPDATE users SET password_hash = ? WHERE id = ?", newPasswordHash, userId);
     }
+
+    /**
+     * Finds a user by email AND locks the row until the transaction ends.
+     * Login uses this, so two login attempts for the same user run one after the other
+     * (this stops "many wrong passwords at the same moment" from beating the lockout).
+     */
+    public Optional<User> findByEmailForUpdate(String email) {
+        return jdbcTemplate.query(
+                "SELECT * FROM users WHERE email = ? FOR UPDATE", USER_ROW_MAPPER, email
+        ).stream().findFirst();
+    }
+
+    /** Same idea by id. Change-password uses it. */
+    public Optional<User> findByIdForUpdate(Long id) {
+        return jdbcTemplate.query(
+                "SELECT * FROM users WHERE id = ? FOR UPDATE", USER_ROW_MAPPER, id
+        ).stream().findFirst();
+    }
 }

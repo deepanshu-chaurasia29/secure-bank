@@ -2,6 +2,8 @@ package com.deepu.securebank.controller;
 
 import com.deepu.securebank.dto.*;
 import com.deepu.securebank.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "1. Authentication", description = "Register, log in, change password")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -21,12 +24,14 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Operation(summary = "Register a new customer and create the account", security = {})
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(summary = "Log in and get a JWT token (locks after 3 wrong passwords)", security = {})
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
@@ -34,6 +39,7 @@ public class AuthController {
     }
 
     // Needs a valid JWT (it is not in the public list in SecurityConfig).
+    @Operation(summary = "Change your own password")
     @PostMapping("/change-password")
     public MessageResponse changePassword(@AuthenticationPrincipal Long userId,
                                           @Valid @RequestBody ChangePasswordRequest request) {

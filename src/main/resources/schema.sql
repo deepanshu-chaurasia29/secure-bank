@@ -1,5 +1,7 @@
---CREATE DATABASE IF NOT EXISTS securebank;
-USE securebank;
+-- The database is chosen by the connection URL (DB_URL), NOT by this file.
+-- That is why there is no CREATE DATABASE and no USE here: cloud databases have their own names
+-- and often do not allow CREATE DATABASE.
+
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,

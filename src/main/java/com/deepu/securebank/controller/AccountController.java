@@ -2,11 +2,14 @@ package com.deepu.securebank.controller;
 
 import com.deepu.securebank.dto.AccountResponse;
 import com.deepu.securebank.service.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "2. Account", description = "The logged-in customer's own account")
 @RestController
 @RequestMapping("/api/v1/accounts")
 public class AccountController {
@@ -19,6 +22,7 @@ public class AccountController {
 
     // The user id comes from the verified JWT (set by JwtFilter), NOT from the request.
     // So a customer can only ever see their own account (FR-S2).
+    @Operation(summary = "Show my account: number, type, status, balance")
     @GetMapping("/me")
     public AccountResponse myAccount(@AuthenticationPrincipal Long userId) {
         return accountService.getMyAccount(userId);

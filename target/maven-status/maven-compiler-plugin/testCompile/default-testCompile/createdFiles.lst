@@ -1,6 +1,14 @@
-com\deepu\securebank\integration\TransferConcurrencyTest$Customer.class
+com\deepu\securebank\integration\AuthParallelLoginIntegrationTest.class
+com\deepu\securebank\config\StartupChecksTest.class
 com\deepu\securebank\integration\TransferConcurrencyTest$TaskWithIndex.class
 com\deepu\securebank\service\TransferServiceTest.class
+com\deepu\securebank\service\AdminServiceTest.class
+com\deepu\securebank\service\AuthServiceTest.class
 com\deepu\securebank\integration\TransferConcurrencyTest$Counts.class
 com\deepu\securebank\service\TransactionServiceTest.class
+com\deepu\securebank\integration\EndToEndJourneyIntegrationTest.class
+com\deepu\securebank\integration\AuthLockoutIntegrationTest.class
+com\deepu\securebank\integration\ApiSecurityIntegrationTest.class
+com\deepu\securebank\integration\TransferConcurrencyTest$Customer.class
 com\deepu\securebank\integration\TransferConcurrencyTest.class
+com\deepu\securebank\integration\TestDatabase.class
