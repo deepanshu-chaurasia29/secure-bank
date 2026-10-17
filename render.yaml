@@ -1,0 +1,32 @@
+# OPTIONAL: a Render "Blueprint". It describes the web service so Render can create it from this file.
+# If you prefer, ignore this file and create the service by hand in the Render dashboard
+# (docs/DEPLOYMENT_GUIDE.md explains both ways).
+#
+# Put this file in the ROOT of your Git repository.
+# If your pom.xml is inside a sub-folder, also add under the service:
+#     dockerContext: ./your-folder
+#     dockerfilePath: ./your-folder/Dockerfile
+
+services:
+  - type: web
+    name: securebank
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_URL
+        sync: false          # you type this value in the Render dashboard (it is a secret)
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true  # Render creates a long random value for you
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: APP_TZ
+        value: Asia/Kolkata
+      - key: DB_POOL_SIZE
+        value: "5"

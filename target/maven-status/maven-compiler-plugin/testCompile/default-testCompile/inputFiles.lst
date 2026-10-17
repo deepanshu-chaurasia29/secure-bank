@@ -1,4 +1,8 @@
+C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\config\StartupChecksTest.java
+C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\integration\ApiSecurityIntegrationTest.java
 C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\integration\AuthLockoutIntegrationTest.java
+C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\integration\AuthParallelLoginIntegrationTest.java
+C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\integration\EndToEndJourneyIntegrationTest.java
 C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\integration\TestDatabase.java
 C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\integration\TransferConcurrencyTest.java
 C:\Programming\PROJECTS\SECURE_BANK\securebank\src\test\java\com\deepu\securebank\service\AdminServiceTest.java
