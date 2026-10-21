@@ -1,5 +1,8 @@
 package com.deepu.securebank.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final JwtFilter jwtFilter;
 
     public SecurityConfig(JwtFilter jwtFilter) {
@@ -28,11 +32,13 @@ public class SecurityConfig {
     private static void writeError(jakarta.servlet.http.HttpServletResponse res, int status,
                                    String message, String path) throws java.io.IOException {
         res.setStatus(status);
+        res.setCharacterEncoding(StandardCharsets.UTF_8.name());
         res.setContentType("application/json");
-        String json = String.format(
-                "{\"timestamp\":\"%s\",\"status\":%d,\"message\":\"%s\",\"path\":\"%s\"}",
-                java.time.LocalDateTime.now(), status, message, path);
-        res.getWriter().write(json);
+        OBJECT_MAPPER.writeValue(res.getWriter(), Map.of(
+                "timestamp", java.time.LocalDateTime.now().toString(),
+                "status", status,
+                "message", message,
+                "path", path));
     }
 
     @Bean

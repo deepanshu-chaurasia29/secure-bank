@@ -1,88 +1,130 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SecureBank - Dashboard</title>
-<link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1730">
+  <meta name="description" content="SecureBank account dashboard and transaction tools.">
+  <title>SecureBank | Account Overview</title>
+  <link rel="stylesheet" href="/css/style.css?v=20261022-profile">
 </head>
-<body class="wide">
-  <header class="top">
-    <h1>SecureBank</h1>
-    <button id="logoutBtn" class="secondary">Logout</button>
-  </header>
-  <p class="notice">Demo project. All money here is demo money.</p>
+<body class="bank-app customer-app">
+  <div class="bank-layout">
+    <aside class="sidebar" aria-label="Customer navigation">
+      <a class="brand sidebar-brand" href="/dashboard.html" aria-label="SecureBank dashboard">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M20 3.5 34 9v10.1c0 8.1-5.8 13.7-14 17.4C11.8 32.8 6 27.2 6 19.1V9L20 3.5Z" stroke="currentColor" stroke-width="2"/><path d="M12 17h16M14 17v9m6-9v9m6-9v9M11 27h18M10 14l10-5 10 5H10Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="brand-copy"><strong>SecureBank</strong><small>PERSONAL BANKING</small></span>
+      </a>
+      <div class="sidebar-label">YOUR SPACE</div>
+      <nav class="sidebar-nav">
+        <a class="side-link is-current" href="#overview"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.7"/></svg></span>Overview</a>
+        <a class="side-link" href="#profile"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c.8-3.1 3.2-4.8 7-4.8s6.2 1.7 7 4.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>My profile</a>
+        <a class="side-link" href="#money"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18M7 15h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>Deposit &amp; withdraw</a>
+        <a class="side-link" href="#transfer"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h15m0 0-4-4m4 4-4 4M20 17H5m0 0 4-4m-4 4 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Transfer money</a>
+        <a class="side-link" href="#history"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 10h16M4 15h10M4 20h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>Transactions</a>
+        <a class="side-link" href="#security"><span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>Security settings</a>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="sidebar-support"><span class="support-icon" aria-hidden="true">?</span><div><strong>Need a hand?</strong><small>This is a demo banking app.</small></div></div>
+      <div class="sidebar-foot"><span class="sidebar-foot-dot"></span> Demo environment <span class="sidebar-foot-sep">•</span> Test data only</div>
+    </aside>
 
-  <section class="card">
-    <h2>My Account</h2>
-    <div id="accountInfo">Loading...</div>
-  </section>
+    <main class="main-content">
+      <header class="app-topbar">
+        <div class="page-heading"><p class="eyebrow">PERSONAL BANKING</p><h1>Your account overview</h1><p class="page-subtitle">Keep track of your balance and everyday money activity.</p></div>
+        <div class="topbar-actions"><span class="environment-pill"><span></span> DEMO ACCOUNT</span><button id="logoutBtn" class="btn btn-quiet" type="button"><span class="logout-icon" aria-hidden="true">↪</span> Log out</button></div>
+      </header>
 
-  <section class="card">
-    <h2>Deposit / Withdraw</h2>
-    <form id="moneyForm">
-      <input type="number" id="amount" step="0.01" min="1" placeholder="Amount (e.g. 500.00)" required>
-      <input type="text" id="remark" maxlength="255" placeholder="Remark (optional)">
-      <div class="row">
-        <button type="submit" id="depositBtn" data-action="deposit">Deposit</button>
-        <button type="submit" id="withdrawBtn" data-action="withdraw" class="secondary">Withdraw</button>
-      </div>
-    </form>
-    <p id="message"></p>
-  </section>
+      <div class="demo-banner"><span class="banner-icon" aria-hidden="true">i</span><p><strong>Demo environment.</strong> Transactions use demonstration data, not real money. Use test details only.</p></div>
 
-  <section class="card">
-    <h2>Transfer Money</h2>
-    <form id="transferForm">
-      <input type="text" id="toAccount" inputmode="numeric" maxlength="12" pattern="\d{12}"
-             placeholder="Receiver account number (12 digits)" required>
-      <input type="number" id="tAmount" step="0.01" min="1" placeholder="Amount (e.g. 250.00)" required>
-      <input type="text" id="tRemark" maxlength="255" placeholder="Remark (optional)">
-      <button type="submit" id="transferBtn">Send money</button>
-    </form>
-    <p id="transferMessage"></p>
-  </section>
+      <section id="overview" class="section-block" aria-labelledby="accountTitle">
+        <div class="section-title-row"><div><p class="eyebrow">ACCOUNT SUMMARY</p><h2 id="accountTitle">My account</h2></div><span class="section-meta">Updated when you refresh</span></div>
+        <div class="account-hero card">
+          <div class="account-hero-copy"><span class="account-overline">AVAILABLE BALANCE</span><div id="accountInfo" class="account-overview" aria-live="polite"><div class="loading-state"><span class="loading-dot"></span> Loading account information…</div></div></div>
+          <div class="account-hero-art" aria-hidden="true"><div class="hero-art-ring ring-large"></div><div class="hero-art-ring ring-small"></div><div class="hero-art-mark"><svg viewBox="0 0 40 40" fill="none"><path d="M20 3.5 34 9v10.1c0 8.1-5.8 13.7-14 17.4C11.8 32.8 6 27.2 6 19.1V9L20 3.5Z" stroke="currentColor" stroke-width="1.5"/><path d="M12 17h16M14 17v9m6-9v9m6-9v9M11 27h18M10 14l10-5 10 5H10Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>SECUREBANK</span></div>
+        </div>
+      </section>
 
-  <section class="card">
-    <h2>Change Password</h2>
-    <form id="passwordForm">
-      <input type="password" id="oldPassword" placeholder="Old password" autocomplete="current-password" required>
-      <input type="password" id="newPassword" placeholder="New password (8+ characters, letter and number)"
-             autocomplete="new-password" required>
-      <button type="submit" id="passwordBtn" class="secondary">Change password</button>
-    </form>
-    <p id="passwordMessage"></p>
-  </section>
+      <section id="profile" class="section-block" aria-labelledby="profileTitle">
+        <div class="section-title-row">
+          <div><p class="eyebrow">PERSONAL DETAILS</p><h2 id="profileTitle">My profile</h2><p class="section-description">Your registered customer information and linked account details.</p></div>
+        </div>
+        <section class="card profile-card" aria-live="polite" aria-busy="true" id="profileCard">
+          <div class="profile-identity">
+            <div class="profile-avatar" id="profileAvatar" aria-hidden="true">SB</div>
+            <div class="profile-identity-copy">
+              <p class="profile-overline">SECUREBANK CUSTOMER</p>
+              <h3 id="profileName">Loading your profile…</h3>
+              <p id="profileEmail" class="profile-primary-email">Please wait while we load your details.</p>
+            </div>
+            <span class="profile-badge"><span class="profile-badge-dot"></span>Personal profile</span>
+          </div>
+          <div id="profileInfo" class="profile-details-grid">
+            <div class="profile-loading loading-state"><span class="loading-dot" aria-hidden="true"></span> Loading personal details…</div>
+          </div>
+          <div class="profile-account-block">
+            <div class="profile-subheading"><h3>Linked bank account</h3><span>Account summary</span></div>
+            <div id="profileAccountInfo" class="profile-details-grid profile-account-grid">
+              <div class="profile-loading loading-state"><span class="loading-dot" aria-hidden="true"></span> Loading account details…</div>
+            </div>
+          </div>
+        </section>
+      </section>
 
-  <section class="card">
-    <h2>Transaction History</h2>
-    <div class="filters">
-      <select id="fType">
-        <option value="">All types</option>
-        <option value="DEPOSIT">Deposit</option>
-        <option value="WITHDRAW">Withdraw</option>
-        <option value="TRANSFER_OUT">Transfer out</option>
-        <option value="TRANSFER_IN">Transfer in</option>
-      </select>
-      <input type="date" id="fFrom">
-      <input type="date" id="fTo">
-      <button id="applyFilters" class="secondary">Apply</button>
+      <section class="section-block" aria-labelledby="actionsTitle">
+        <div class="section-title-row"><div><p class="eyebrow">MONEY MOVEMENT</p><h2 id="actionsTitle">What would you like to do?</h2></div></div>
+        <div class="action-grid">
+          <section id="money" class="card action-card" aria-labelledby="moneyTitle">
+            <div class="card-title-line"><span class="action-icon action-icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M5 11l7-7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3 id="moneyTitle">Deposit or withdraw</h3><p>Add money to the demo account or withdraw from it.</p></div></div>
+            <form id="moneyForm" class="form-stack">
+              <div class="field-group"><label for="amount">Amount (₹)</label><input type="number" id="amount" name="amount" step="0.01" min="1" max="100000" placeholder="0.00" inputmode="decimal" required></div>
+              <div class="field-group"><label for="remark">Reference note <span class="optional-label">Optional</span></label><input type="text" id="remark" name="remark" maxlength="255" placeholder="What is this for?"></div>
+              <div class="button-row"><button type="submit" id="depositBtn" data-action="deposit" class="btn btn-primary">Deposit money</button><button type="submit" id="withdrawBtn" data-action="withdraw" class="btn btn-outline">Withdraw</button></div>
+            </form>
+            <p id="message" class="feedback form-feedback" role="status" aria-live="polite" hidden></p>
+          </section>
+
+          <section id="transfer" class="card action-card" aria-labelledby="transferTitle">
+            <div class="card-title-line"><span class="action-icon action-icon-teal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h15m0 0-4-4m4 4-4 4M20 17H5m0 0 4-4m-4 4 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3 id="transferTitle">Transfer money</h3><p>Send demo money to another SecureBank account.</p></div></div>
+            <form id="transferForm" class="form-stack">
+              <div class="field-group"><label for="toAccount">Receiver account number</label><input type="text" id="toAccount" name="toAccountNumber" inputmode="numeric" autocomplete="off" maxlength="12" pattern="[0-9]{12}" placeholder="Enter 12-digit account number" required></div>
+              <div class="field-group"><label for="tAmount">Amount (₹)</label><input type="number" id="tAmount" name="amount" step="0.01" min="1" max="100000" placeholder="0.00" inputmode="decimal" required></div>
+              <div class="field-group"><label for="tRemark">Reference note <span class="optional-label">Optional</span></label><input type="text" id="tRemark" name="remark" maxlength="255" placeholder="Add a short note"></div>
+              <button type="submit" id="transferBtn" class="btn btn-primary">Review transfer <span aria-hidden="true">↗</span></button>
+            </form>
+            <p id="transferMessage" class="feedback form-feedback" role="status" aria-live="polite" hidden></p>
+            <div class="secure-inline"><span aria-hidden="true">✓</span> You will confirm before a transfer is sent.</div>
+          </section>
+        </div>
+      </section>
+
+      <section id="history" class="section-block" aria-labelledby="historyTitle">
+        <div class="section-title-row"><div><p class="eyebrow">YOUR ACTIVITY</p><h2 id="historyTitle">Transaction history</h2><p class="section-description">Review completed deposits, withdrawals and transfers.</p></div></div>
+        <section class="card table-card">
+          <div class="table-toolbar"><div><h3>All transactions</h3><p>Use filters to find a specific activity.</p></div><div class="filters"><div class="filter-field"><label for="fType">Transaction type</label><select id="fType"><option value="">All types</option><option value="DEPOSIT">Deposit</option><option value="WITHDRAW">Withdraw</option><option value="TRANSFER_OUT">Transfer sent</option><option value="TRANSFER_IN">Transfer received</option></select></div><div class="filter-field"><label for="fFrom">From</label><input type="date" id="fFrom"></div><div class="filter-field"><label for="fTo">To</label><input type="date" id="fTo"></div><button id="applyFilters" class="btn btn-outline filter-button" type="button">Apply filters</button></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Date &amp; time</th><th>Type</th><th>Amount</th><th>Balance after</th><th>Other account</th><th>Reference note</th></tr></thead><tbody id="historyBody"><tr><td colspan="6"><div class="loading-state"><span class="loading-dot"></span> Loading transactions…</div></td></tr></tbody></table></div>
+          <div class="pager"><span id="pageInfo" class="pager-label" aria-live="polite"></span><div class="pager-actions"><button id="prevBtn" class="btn btn-small btn-outline" type="button" disabled>Previous</button><button id="nextBtn" class="btn btn-small btn-outline" type="button" disabled>Next</button></div></div>
+        </section>
+      </section>
+
+      <section id="security" class="section-block" aria-labelledby="securityTitle">
+        <div class="section-title-row"><div><p class="eyebrow">ACCOUNT SAFETY</p><h2 id="securityTitle">Security settings</h2></div></div>
+        <section class="card security-card"><div class="security-card-intro"><span class="action-icon action-icon-violet" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><div><h3>Change your password</h3><p>Choose a strong password that you do not use on other sites.</p></div></div><form id="passwordForm" class="password-change-form"><div class="field-group"><label for="oldPassword">Current password</label><input type="password" id="oldPassword" name="oldPassword" autocomplete="current-password" required></div><div class="field-group"><label for="newPassword">New password</label><input type="password" id="newPassword" name="newPassword" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" placeholder="At least 8 characters, with a letter and number" required></div><button type="submit" id="passwordBtn" class="btn btn-primary">Update password</button></form><p id="passwordMessage" class="feedback form-feedback" role="status" aria-live="polite" hidden></p></section>
+      </section>
+
+      <footer class="app-footer"><span>SecureBank Demo</span><span>Use test data only. This is not a real banking service.</span><a href="/swagger-ui.html" target="_blank" rel="noopener noreferrer">API documentation</a></footer>
+    </main>
+  </div>
+  <dialog id="transferConfirmDialog" class="confirm-dialog" aria-labelledby="confirmTransferTitle">
+    <div class="confirm-dialog-content">
+      <span class="confirm-dialog-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h15m0 0-4-4m4 4-4 4M20 17H5m0 0 4-4m-4 4 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <p class="eyebrow">TRANSFER REVIEW</p>
+      <h2 id="confirmTransferTitle">Confirm this transfer?</h2>
+      <p class="confirm-copy">Review the amount and receiver before continuing.</p>
+      <div class="confirm-transfer-summary"><span>Transfer amount</span><strong id="confirmTransferAmount">₹0.00</strong><span>Receiver account</span><strong id="confirmTransferAccount" class="confirm-account-number"></strong></div>
+      <div class="confirm-dialog-actions"><button id="cancelTransferBtn" class="btn btn-outline" type="button">Cancel</button><button id="confirmTransferBtn" class="btn btn-primary" type="button">Confirm transfer</button></div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance after</th><th>Other account</th><th>Remark</th></tr>
-        </thead>
-        <tbody id="historyBody"><tr><td colspan="6">Loading...</td></tr></tbody>
-      </table>
-    </div>
-    <div class="pager">
-      <button id="prevBtn" class="secondary">Previous</button>
-      <span id="pageInfo"></span>
-      <button id="nextBtn" class="secondary">Next</button>
-    </div>
-  </section>
-
-  <script src="/js/dashboard.js"></script>
+  </dialog>
+  <script src="/js/dashboard.js?v=20261022-profile" defer></script>
 </body>
 </html>

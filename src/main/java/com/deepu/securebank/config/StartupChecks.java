@@ -6,39 +6,39 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-/**
- * Checks the JWT secret at startup.
- * With the local-only default secret, anyone who has read your code can make valid tokens.
- *
- *  - Default secret + REQUIRE_CUSTOM_JWT_SECRET=true  -> the app REFUSES to start (used in Docker / on Render)
- *  - Default secret + flag not set                    -> only a WARNING (fine on your laptop)
- */
+/** Rejects the known local-only JWT key in Docker/Render deployments. */
 @Component
 public class StartupChecks implements CommandLineRunner {
 
-    private static final Logger log = LoggerFactory.getLogger(StartupChecks.class);
-    private static final String LOCAL_DEFAULT_PREFIX = "change-this-local-only";
+  private static final Logger log = LoggerFactory.getLogger(StartupChecks.class);
+  private static final String LOCAL_DEFAULT_PREFIX = "change-this-local-only";
+  private static final int MIN_SECRET_LENGTH = 32;
 
-    private final String jwtSecret;
-    private final boolean requireCustomSecret;
+  private final String jwtSecret;
+  private final boolean requireCustomSecret;
 
-    public StartupChecks(@Value("${app.jwt.secret}") String jwtSecret,
-                         @Value("${REQUIRE_CUSTOM_JWT_SECRET:false}") boolean requireCustomSecret) {
-        this.jwtSecret = jwtSecret;
-        this.requireCustomSecret = requireCustomSecret;
+  public StartupChecks(@Value("${app.jwt.secret}") String jwtSecret,
+                       @Value("${REQUIRE_CUSTOM_JWT_SECRET:false}") boolean requireCustomSecret) {
+    this.jwtSecret = jwtSecret;
+    this.requireCustomSecret = requireCustomSecret;
+  }
+
+  @Override
+  public void run(String... args) {
+    boolean missingOrWeak = jwtSecret == null
+        || jwtSecret.isBlank()
+        || jwtSecret.startsWith(LOCAL_DEFAULT_PREFIX)
+        || jwtSecret.length() < MIN_SECRET_LENGTH;
+
+    if (!missingOrWeak) {
+      return;
     }
-
-    @Override
-    public void run(String... args) {
-        if (!jwtSecret.startsWith(LOCAL_DEFAULT_PREFIX)) {
-            return; // a custom secret is in use: all good
-        }
-        if (requireCustomSecret) {
-            throw new IllegalStateException(
-                    "JWT_SECRET is not set. Refusing to start with the local-only default secret. "
-                            + "Set the JWT_SECRET environment variable (at least 32 random characters).");
-        }
-        log.warn("JWT_SECRET is not set: using the local-only default secret. "
-                + "This is fine on your laptop, but NEVER deploy like this.");
+    if (requireCustomSecret) {
+      throw new IllegalStateException(
+          "JWT_SECRET is missing, uses the local-only default, or is shorter than 32 characters. "
+              + "Refusing to start. Set a unique random JWT_SECRET of at least 32 characters.");
     }
+    log.warn("JWT_SECRET is missing, short, or uses the local-only default. "
+        + "This is only acceptable for local development; never deploy with this setting.");
+  }
 }

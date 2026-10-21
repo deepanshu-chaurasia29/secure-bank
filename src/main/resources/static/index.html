@@ -1,36 +1,106 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>SecureBank - Sprint 1</title>
-<link rel="stylesheet" href="/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1730">
+  <meta name="description" content="SecureBank demo banking portal for account access and everyday account management.">
+  <title>SecureBank | Personal Banking</title>
+  <link rel="stylesheet" href="/css/style.css?v=20261021">
 </head>
-<body>
-  <h1>SecureBank (Sprint 1: Register / Login)</h1>
+<body class="auth-page">
+  <header class="public-header">
+    <a class="brand" href="/" aria-label="SecureBank home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none"><path d="M20 3.5 34 9v10.1c0 8.1-5.8 13.7-14 17.4C11.8 32.8 6 27.2 6 19.1V9L20 3.5Z" stroke="currentColor" stroke-width="2"/><path d="M12 17h16M14 17v9m6-9v9m6-9v9M11 27h18M10 14l10-5 10 5H10Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand-copy"><strong>SecureBank</strong><small>PERSONAL BANKING</small></span>
+    </a>
+    <nav class="public-nav" aria-label="Main navigation">
+      <a href="#benefits">Why SecureBank</a>
+      <a href="#help">Help &amp; support</a>
+    </nav>
+    <a class="header-signin" href="#account-access">Sign in <span aria-hidden="true">↗</span></a>
+  </header>
 
-  <h2>Register</h2>
-  <form id="registerForm">
-    <input type="text" id="regFullName" placeholder="Full name" required>
-    <input type="email" id="regEmail" placeholder="Email" required>
-    <input type="text" id="regPhone" placeholder="Phone (10 digits)" required>
-    <input type="date" id="regDob" required>
-    <input type="password" id="regPassword" placeholder="Password" required>
-    <select id="regAccountType">
-      <option value="SAVINGS">Savings</option>
-      <option value="CURRENT">Current</option>
-    </select>
-    <button type="submit">Register</button>
-  </form>
+  <main class="auth-layout">
+    <section class="auth-story" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> A CLEARER WAY TO BANK</span>
+        <h1 id="hero-title">Your everyday banking, <em>made simpler.</em></h1>
+        <p class="hero-subtitle">A clean space to check your account, move money, and keep track of the activity that matters to you.</p>
+        <div class="hero-points" id="benefits">
+          <div class="hero-point"><span class="point-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10h16M6 10v9m4-9v9m4-9v9m4-9v9M3 21h18M12 3 3 7v2h18V7L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>Your account at a glance</strong><small>Balance, account details and recent activity in one place.</small></span></div>
+          <div class="hero-point"><span class="point-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 19 6v5c0 4.4-2.8 7.8-7 10-4.2-2.2-7-5.6-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>Designed with care</strong><small>Clear actions, useful confirmations, and readable records.</small></span></div>
+          <div class="hero-point"><span class="point-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 10h18M7 15h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span><strong>Everyday actions together</strong><small>Use the demo portal to deposit, withdraw, transfer and review activity.</small></span></div>
+        </div>
+      </div>
 
-  <h2>Login</h2>
-  <form id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" required>
-    <input type="password" id="loginPassword" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
+      <div class="visual-stage" aria-label="SecureBank digital account illustration">
+        <div class="orb orb-one"></div><div class="orb orb-two"></div>
+        <div class="bank-card-art">
+          <div class="bank-card-top"><span class="card-chip" aria-hidden="true"><svg viewBox="0 0 40 30" fill="none"><rect x="1" y="1" width="38" height="28" rx="5" stroke="currentColor" stroke-width="1.4"/><path d="M13 2v26M27 2v26M2 10h36M2 20h36" stroke="currentColor" stroke-width="1.2"/></svg></span><span class="contactless" aria-hidden="true">)))</span></div>
+          <div class="card-label">SECUREBANK <span>DEMO ACCOUNT</span></div>
+          <div class="card-number" aria-label="Illustrative masked card number">•••• &nbsp; •••• &nbsp; •••• &nbsp; ••••</div>
+          <div class="bank-card-bottom"><span>PERSONAL BANKING</span><span class="card-circles" aria-hidden="true"><i></i><i></i></span></div>
+        </div>
+        <div class="floating-note"><span class="note-check" aria-hidden="true">✓</span><span><strong>One simple view</strong><small>Accounts and activity</small></span></div>
+        <div class="visual-caption"><span class="caption-line"></span><span>Made for your everyday money routine</span></div>
+      </div>
+      <div class="story-footer"><span class="footer-lock" aria-hidden="true">◆</span> Demo banking experience <span class="footer-separator">•</span> Use test information only</div>
+    </section>
 
-  <pre id="output"></pre>
+    <section class="auth-panel" id="account-access" aria-labelledby="auth-heading">
+      <div class="auth-card">
+        <div class="auth-card-heading">
+          <div class="mobile-brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M20 3.5 34 9v10.1c0 8.1-5.8 13.7-14 17.4C11.8 32.8 6 27.2 6 19.1V9L20 3.5Z" stroke="currentColor" stroke-width="2"/><path d="M12 17h16M14 17v9m6-9v9m6-9v9M11 27h18M10 14l10-5 10 5H10Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <p class="eyebrow">YOUR ACCOUNT, YOUR WAY</p>
+          <h2 id="auth-heading">Welcome back.</h2>
+          <p class="auth-intro">Sign in to continue to your SecureBank account.</p>
+        </div>
 
-  <script src="/js/app.js"></script>
+        <div class="auth-tabs" role="tablist" aria-label="Account access options">
+          <button id="loginTab" class="auth-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="loginPanel">Sign in</button>
+          <button id="registerTab" class="auth-tab" type="button" role="tab" aria-selected="false" aria-controls="registerPanel">Open an account</button>
+        </div>
+
+        <section id="loginPanel" class="auth-tab-panel" role="tabpanel" aria-labelledby="loginTab">
+          <form id="loginForm" class="auth-form" novalidate>
+            <div class="field-group">
+              <label for="loginEmail">Email address</label>
+              <input type="email" id="loginEmail" name="email" placeholder="you@example.com" autocomplete="username" required maxlength="150">
+            </div>
+            <div class="field-group">
+              <div class="field-label-row"><label for="loginPassword">Password</label><span class="field-hint">Keep it private</span></div>
+              <div class="password-field"><input type="password" id="loginPassword" name="password" placeholder="Enter your password" autocomplete="current-password" required><button class="password-toggle" type="button" data-toggle-password="loginPassword" aria-label="Show password" aria-pressed="false">Show</button></div>
+            </div>
+            <button class="btn btn-primary btn-full" type="submit" id="loginSubmit"><span>Sign in securely</span><span aria-hidden="true">↗</span></button>
+          </form>
+          <div class="auth-divider"><span>or</span></div>
+          <p class="auth-switch-copy">New to SecureBank? <button type="button" class="text-button" data-open-tab="register">Create an account</button></p>
+        </section>
+
+        <section id="registerPanel" class="auth-tab-panel" role="tabpanel" aria-labelledby="registerTab" hidden>
+          <form id="registerForm" class="auth-form register-form" novalidate>
+            <div class="field-group"><label for="regFullName">Full name</label><input type="text" id="regFullName" name="fullName" placeholder="Your full name" autocomplete="name" required maxlength="100"></div>
+            <div class="field-group"><label for="regEmail">Email address</label><input type="email" id="regEmail" name="email" placeholder="you@example.com" autocomplete="email" required maxlength="150"></div>
+            <div class="field-grid">
+              <div class="field-group"><label for="regPhone">Mobile number</label><input type="tel" id="regPhone" name="phone" placeholder="10-digit number" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel" required></div>
+              <div class="field-group"><label for="regDob">Date of birth</label><input type="date" id="regDob" name="dateOfBirth" autocomplete="bday" required><small class="field-help">You must be at least 18 years old.</small></div>
+            </div>
+            <div class="field-group"><label for="regAccountType">Account type</label><select id="regAccountType" name="accountType" required><option value="SAVINGS">Savings account</option><option value="CURRENT">Current account</option></select></div>
+            <div class="field-group"><div class="field-label-row"><label for="regPassword">Create password</label><span class="field-hint">8+ characters</span></div><div class="password-field"><input type="password" id="regPassword" name="password" placeholder="Use a letter and a number" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9]).{8,}" required><button class="password-toggle" type="button" data-toggle-password="regPassword" aria-label="Show password" aria-pressed="false">Show</button></div><small class="field-help">Use at least 8 characters, including one letter and one number.</small></div>
+            <button class="btn btn-primary btn-full" type="submit" id="registerSubmit"><span>Create account</span><span aria-hidden="true">↗</span></button>
+          </form>
+          <p class="auth-switch-copy register-switch">Already have an account? <button type="button" class="text-button" data-open-tab="login">Sign in instead</button></p>
+        </section>
+
+        <p id="output" class="feedback" role="status" aria-live="polite" hidden></p>
+        <div class="auth-security-note"><span class="security-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span><span><strong>Your details stay yours.</strong><small>This is a project demo. Never use a real banking password or personal financial data.</small></span></div>
+      </div>
+      <footer class="panel-footer" id="help"><span>© <span id="copyrightYear">2026</span> SecureBank Demo</span><span><a href="/swagger-ui.html" target="_blank" rel="noopener noreferrer">API documentation</a></span></footer>
+    </section>
+  </main>
+  <script src="/js/app.js?v=20261021" defer></script>
 </body>
 </html>

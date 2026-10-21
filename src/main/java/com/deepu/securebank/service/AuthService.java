@@ -1,6 +1,7 @@
 package com.deepu.securebank.service;
 
 import com.deepu.securebank.dto.AuthResponse;
+import com.deepu.securebank.dto.CustomerProfileResponse;
 import com.deepu.securebank.dto.ChangePasswordRequest;
 import com.deepu.securebank.dto.LoginRequest;
 import com.deepu.securebank.dto.RegisterRequest;
@@ -135,6 +136,23 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(user.getId(), user.getRole());
         return new AuthResponse(token, accountNumber, user.getFullName(), user.getRole());
+    }
+
+    /**
+     * Returns only the profile fields needed by the authenticated user interface.
+     * Password hashes and internal lockout fields are deliberately not exposed.
+     */
+    @Transactional(readOnly = true)
+    public CustomerProfileResponse getMyProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Profile not found"));
+
+        return new CustomerProfileResponse(
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getDateOfBirth(),
+                user.getCreatedAt());
     }
 
     /**

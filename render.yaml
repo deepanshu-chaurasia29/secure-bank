@@ -30,3 +30,5 @@ services:
         value: Asia/Kolkata
       - key: DB_POOL_SIZE
         value: "5"
+      - key: DB_SCHEMA_INIT_MODE
+        value: never  # The existing Aiven database already has its tables; do not run DDL on each production start.
