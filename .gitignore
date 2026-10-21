@@ -1,0 +1,23 @@
+# Local environment values and secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+target/
+
+# IDE metadata / machine-specific settings
+.idea/
+*.iml
+.vscode/
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+
+.idea/

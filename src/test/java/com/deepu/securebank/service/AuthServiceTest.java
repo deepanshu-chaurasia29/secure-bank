@@ -1,6 +1,7 @@
 package com.deepu.securebank.service;
 
 import com.deepu.securebank.dto.AuthResponse;
+import com.deepu.securebank.dto.CustomerProfileResponse;
 import com.deepu.securebank.dto.ChangePasswordRequest;
 import com.deepu.securebank.dto.LoginRequest;
 import com.deepu.securebank.exception.ApiException;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -70,6 +72,34 @@ class AuthServiceTest {
         r.setOldPassword(oldPassword);
         r.setNewPassword(newPassword);
         return r;
+    }
+
+    @Test
+    void getMyProfile_returnsOnlyCustomerProfileFields() {
+        User customer = user("CUSTOMER", 0, null);
+        customer.setFullName("Sample Customer");
+        customer.setEmail("sample@example.com");
+        customer.setPhone("9876543210");
+        customer.setDateOfBirth(LocalDate.of(1998, 4, 12));
+        customer.setCreatedAt(LocalDateTime.of(2024, 1, 15, 10, 30));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(customer));
+
+        CustomerProfileResponse response = service.getMyProfile(1L);
+
+        assertEquals("Sample Customer", response.getFullName());
+        assertEquals("sample@example.com", response.getEmail());
+        assertEquals("9876543210", response.getPhone());
+        assertEquals(LocalDate.of(1998, 4, 12), response.getDateOfBirth());
+        assertEquals(LocalDateTime.of(2024, 1, 15, 10, 30), response.getMemberSince());
+    }
+
+    @Test
+    void getMyProfile_unknownUser_returnsNotFound() {
+        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        ApiException ex = assertThrows(ApiException.class, () -> service.getMyProfile(99L));
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatus());
     }
 
     // ---------------- change password ----------------
